@@ -1,14 +1,19 @@
-import { readFileSync } from "fs";
+import fs from "fs/promises";
 import path from "path";
 
-const blogsBase64 = readFileSync(
-  path.join(process.cwd(), "app", "data", "Blogs.pdf")
-).toString("base64");
-const bookBase64 = readFileSync(
-  path.join(process.cwd(), "app", "data", "Book.pdf")
-).toString("base64");
+async function loadPdfData() {
+  const blogsPath = path.join(process.cwd(), "app", "data", "Blogs.pdf");
+  const bookPath = path.join(process.cwd(), "app", "data", "Book.pdf");
 
-export const pdfData = {
-  blogsBase64,
-  bookBase64,
-};
+  const [blogsBuffer, bookBuffer] = await Promise.all([
+    fs.readFile(blogsPath),
+    fs.readFile(bookPath),
+  ]);
+
+  return {
+    blogsBase64: blogsBuffer.toString("base64"),
+    bookBase64: bookBuffer.toString("base64"),
+  };
+}
+
+export const pdfDataPromise = loadPdfData();
