@@ -1,8 +1,7 @@
 "use server";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { readFileSync } from "fs";
-import path from "path";
+import { pdfData } from "./data/pdfData";
 
 interface VideoDetails {
   videoTopic: string;
@@ -16,15 +15,7 @@ export async function processPdfAction(videoDetails: VideoDetails) {
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY as string);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Read both PDF files using process.cwd()
-    const blogsPdfFile = readFileSync(
-      path.join(process.cwd(), "app", "data", "Blogs.pdf")
-    );
-    const blogsBase64 = blogsPdfFile.toString("base64");
-    const bookPdfFile = readFileSync(
-      path.join(process.cwd(), "app", "data", "Book.pdf")
-    );
-    const bookBase64 = bookPdfFile.toString("base64");
+    const { blogsBase64, bookBase64 } = pdfData;
 
     const prompt = `
         Please use the information provided in the PDFs to generate a response based on the following details:
