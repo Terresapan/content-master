@@ -1,7 +1,7 @@
 "use server";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { pdfDataPromise } from "./data/pdfData";
+import { pdfData } from "./data/pdfData";
 
 interface VideoDetails {
   videoTopic: string;
@@ -15,7 +15,7 @@ export async function processPdfAction(videoDetails: VideoDetails) {
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY as string);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const { blogsBase64, bookBase64 } = await pdfDataPromise;
+    const { blogsBase64, bookBase64 } = pdfData;
 
     const prompt = `
         Please use the information provided in the PDFs to generate a response based on the following details:
